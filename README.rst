@@ -9,6 +9,18 @@ Django Models and working with trees of Model instances.
     :alt: Build Status
     :target: https://travis-ci.org/django-mptt/django-mptt
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :alt: Black code style
+    :target: https://github.com/psf/black
+
+.. image:: https://img.shields.io/pypi/v/django-mptt
+    :alt: PyPI
+    :target: https://pypi.org/project/django-mptt/
+
+.. image:: https://pepy.tech/badge/django-mptt
+    :alt: Downloads
+    :target: https://pepy.tech/project/django-mptt
+
 Project home: https://github.com/django-mptt/django-mptt/
 
 Documentation: https://django-mptt.readthedocs.io/
