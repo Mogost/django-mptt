@@ -512,7 +512,7 @@ class DeletionTestCase(TreeTestCase):
 
     def test_delete_multiple_nodes(self):
         """Regression test for Issue 576."""
-        queryset = Category.objects.filter(id__in=[6,7])
+        queryset = Category.objects.filter(id__in=[6, 7])
         for category in queryset:
             category .delete()
 
@@ -1521,7 +1521,9 @@ class DrilldownTreeTestCase(TreeTestCase):
     def render_for_node(self, pk, cumulative=False, m2m=False, all_descendants=False):
         template = self.template
         if all_descendants:
-            template = template.replace(' count myapp.Game.genre in game_count ', ' all_descendants ')
+            template = template.replace(
+                ' count myapp.Game.genre in game_count ', ' all_descendants '
+            )
         if cumulative:
             template = template.replace(' count ', ' cumulative count ')
         if m2m:

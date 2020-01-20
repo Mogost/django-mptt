@@ -321,7 +321,7 @@ class Book(MPTTModel):
 
 class UniqueTogetherModel(MPTTModel):
     class Meta:
-        unique_together = (('parent','code',),)
+        unique_together = (('parent', 'code',),)
     parent = TreeForeignKey('self', null=True, on_delete=models.CASCADE)
     code = models.CharField(max_length=10)
 
