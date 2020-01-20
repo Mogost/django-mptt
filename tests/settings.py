@@ -1,7 +1,5 @@
 import os
 
-import django
-
 DIRNAME = os.path.dirname(__file__)
 
 DEBUG = True

@@ -2,7 +2,6 @@ import io
 import os
 import re
 import sys
-import tempfile
 import unittest
 
 from django.contrib.auth.models import Group, User
@@ -31,7 +30,8 @@ from myapp.models import (
     Category, Item, Genre, CustomPKName, SingleProxyModel, DoubleProxyModel,
     ConcreteModel, OrderedInsertion, AutoNowDateFieldModel, Person,
     CustomTreeQueryset, Node, CustomTreeManager, Book, UUIDNode, Student,
-    MultipleManagerModel, UniqueTogetherModel, NullableOrderedInsertionModel, NullableDescOrderedInsertionModel)
+    MultipleManagerModel, UniqueTogetherModel, NullableOrderedInsertionModel,
+    NullableDescOrderedInsertionModel)
 
 
 def get_tree_details(nodes):
