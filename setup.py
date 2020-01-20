@@ -1,6 +1,16 @@
 #!/usr/bin/env python
 
 from setuptools import find_packages, setup
+from pathlib import Path  # noqa E402
+
+
+CURRENT_DIR = Path(__file__).parent
+
+
+def get_long_description() -> str:
+    readme = CURRENT_DIR / "README.rst"
+    with open(readme) as readme_file:
+        return ld_freadme_fileile.read()
 
 
 setup(
@@ -14,6 +24,8 @@ setup(
     author_email='craig.ds@gmail.com',
     url='https://github.com/django-mptt/django-mptt',
     license='MIT License',
+    long_description=get_long_description(),
+    long_description_content_type='text/x-rst',
     packages=find_packages(exclude=['tests', 'tests.*']),
     include_package_data=True,
     install_requires=[
