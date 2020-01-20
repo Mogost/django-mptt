@@ -110,13 +110,17 @@ class TestForms(TreeTestCase):
             '</select></td></tr>'
         )
         self.assertHTMLEqual(str(form), expected)
-        form = MoveNodeForm(Genre.objects.get(pk=7), level_indicator='+--', target_select_size=5)
+        form = MoveNodeForm(
+            Genre.objects.get(pk=7), level_indicator="+--", target_select_size=5
+        )
         self.assertIn('size="5"', str(form['target']))
         self.assertInHTML(
             '<option value="3">+--+-- 2D Platformer</option>',
             str(form['target'])
         )
-        form = MoveNodeForm(Genre.objects.get(pk=7), position_choices=(('left', 'left'),))
+        form = MoveNodeForm(
+            Genre.objects.get(pk=7), position_choices=(("left", "left"),)
+        )
         self.assertHTMLEqual(str(form['position']), (
             '<select id="id_position" name="position">'
             '<option value="left">left</option>'
@@ -142,14 +146,18 @@ class TestForms(TreeTestCase):
             '<option value="11">--- Tactical RPG</option>'
             '</select>'
         )
-        field = TreeNodeChoiceField(queryset=Genre.objects.all(), empty_label='None of the below')
+        field = TreeNodeChoiceField(
+            queryset=Genre.objects.all(), empty_label='None of the below'
+        )
         self.assertInHTML(
             '<option value="" selected>None of the below</option>',
             field.widget.render("test", None)
         )
 
     def test_treenodechoicefield_level_indicator(self):
-        field = TreeNodeChoiceField(queryset=Genre.objects.all(), level_indicator='+--')
+        field = TreeNodeChoiceField(
+            queryset=Genre.objects.all(), level_indicator='+--'
+        )
         self.assertHTMLEqual(
             field.widget.render("test", None),
             '<select name="test">'

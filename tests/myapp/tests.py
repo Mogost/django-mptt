@@ -1982,7 +1982,7 @@ class DraggableMPTTAdminTestCase(TreeTestCase):
         self.assertContains(response, 'style="text-indent:0px"', 3)
         self.assertContains(
             response,
-            'javascript" src="/static/mptt/draggable-admin.js"'
+            'src="/static/mptt/draggable-admin.js"'
             ' data-context="{&quot;')
         self.assertContains(
             response,
@@ -2082,8 +2082,12 @@ class ListFiltersTests(TestCase):
         self.simple_category = Category.objects.create(name='Simple category')
 
         self.book1 = Book.objects.create(name='book1', fk=self.child_category1)
-        self.book2 = Book.objects.create(name='book2', fk=self.parent_category, parent=self.book1)
-        self.book3 = Book.objects.create(name='book3', fk=self.simple_category, parent=self.book1)
+        self.book2 = Book.objects.create(
+            name='book2', fk=self.parent_category, parent=self.book1
+        )
+        self.book3 = Book.objects.create(
+            name='book3', fk=self.simple_category, parent=self.book1
+        )
         self.book4 = Book.objects.create(name='book4')
 
         self.book1.m2m.add(self.child_category1)
@@ -2114,13 +2118,30 @@ class ListFiltersTests(TestCase):
         request = self.get_request('/')
         changelist = self.get_changelist(request, Book, modeladmin)
 
-        # Make sure that all categories are present in the referencing model's list filter
+        # Make sure that all categories are present 
+        # in the referencing model's list filter
         filterspec = changelist.get_filters(request)[0][0]
         expected = [
-            (self.parent_category.pk, self.parent_category.name, ' style="padding-left:0px"'),
-            (self.child_category1.pk, self.child_category1.name, ' style="padding-left:10px"'),
-            (self.child_category2.pk, self.child_category2.name, ' style="padding-left:10px"'),
-            (self.simple_category.pk, self.simple_category.name, ' style="padding-left:0px"'),
+            (
+                self.parent_category.pk,
+                self.parent_category.name,
+                ' style="padding-left:0px"',
+            ),
+            (
+                self.child_category1.pk,
+                self.child_category1.name,
+                ' style="padding-left:10px"',
+            ),
+            (
+                self.child_category2.pk,
+                self.child_category2.name,
+                ' style="padding-left:10px"',
+            ),
+            (
+                self.simple_category.pk,
+                self.simple_category.name,
+                ' style="padding-left:0px"',
+            ),
         ]
         self.assertEqual(sorted(filterspec.lookup_choices), sorted(expected))
 
@@ -2136,25 +2157,33 @@ class ListFiltersTests(TestCase):
         self.assertEqual(choices[-1]['query_string'], '?fk__isnull=True')
 
         # Make sure child's categories books included
-        request = self.get_request('/', {'fk__id__inhierarchy': self.parent_category.pk})
+        request = self.get_request(
+            '/', {'fk__id__inhierarchy': self.parent_category.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual((list(queryset)), [self.book1, self.book2])
 
         # Make sure filter for child category works as expected
-        request = self.get_request('/', {'fk__id__inhierarchy': self.child_category1.pk})
+        request = self.get_request(
+            '/', {'fk__id__inhierarchy': self.child_category1.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual((list(queryset)), [self.book1])
 
         # Make sure filter for empty category works as expected
-        request = self.get_request('/', {'fk__id__inhierarchy': self.child_category2.pk})
+        request = self.get_request(
+            '/', {'fk__id__inhierarchy': self.child_category2.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual(queryset.count(), 0)
 
         # Make sure filter for simple category with no hierarchy works as expected
-        request = self.get_request('/', {'fk__id__inhierarchy': self.simple_category.pk})
+        request = self.get_request(
+            '/', {'fk__id__inhierarchy': self.simple_category.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual((list(queryset)), [self.book3])
@@ -2165,14 +2194,30 @@ class ListFiltersTests(TestCase):
         request = self.get_request('/')
         changelist = self.get_changelist(request, Book, modeladmin)
 
-        # Make sure that all categories are present in the referencing model's list filter
+        # Make sure that all categories are present 
+        # in the referencing model's list filter
         filterspec = changelist.get_filters(request)[0][1]
         expected = [
-            (self.parent_category.pk, self.parent_category.name, ' style="padding-left:0px"'),
-            (self.child_category1.pk, self.child_category1.name, ' style="padding-left:10px"'),
-            (self.child_category2.pk, self.child_category2.name, ' style="padding-left:10px"'),
-            (self.simple_category.pk, self.simple_category.name, ' style="padding-left:0px"'),
-
+            (
+                self.parent_category.pk,
+                self.parent_category.name,
+                ' style="padding-left:0px"',
+            ),
+            (
+                self.child_category1.pk,
+                self.child_category1.name,
+                ' style="padding-left:10px"',
+            ),
+            (
+                self.child_category2.pk,
+                self.child_category2.name,
+                ' style="padding-left:10px"',
+            ),
+            (
+                self.simple_category.pk,
+                self.simple_category.name,
+                ' style="padding-left:0px"',
+            ),
         ]
         self.assertEqual(sorted(filterspec.lookup_choices), sorted(expected))
 
@@ -2190,25 +2235,33 @@ class ListFiltersTests(TestCase):
         self.assertEqual(choices[-1]['query_string'], '?m2m__isnull=True')
 
         # Make sure child's categories books included
-        request = self.get_request('/', {'m2m__id__inhierarchy': self.parent_category.pk})
+        request = self.get_request(
+            '/', {'m2m__id__inhierarchy': self.parent_category.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual((list(queryset)), [self.book1, self.book2])
 
         # Make sure filter for child category works as expected
-        request = self.get_request('/', {'m2m__id__inhierarchy': self.child_category1.pk})
+        request = self.get_request(
+            '/', {'m2m__id__inhierarchy': self.child_category1.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual((list(queryset)), [self.book1])
 
         # Make sure filter for empty category works as expected
-        request = self.get_request('/', {'fk__id__inhierarchy': self.child_category2.pk})
+        request = self.get_request(
+            '/', {'fk__id__inhierarchy': self.child_category2.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual(queryset.count(), 0)
 
         # Make sure filter for simple category with no hierarchy works as expected
-        request = self.get_request('/', {'m2m__id__inhierarchy': self.simple_category.pk})
+        request = self.get_request(
+            '/', {'m2m__id__inhierarchy': self.simple_category.pk}
+        )
         changelist = self.get_changelist(request, Book, modeladmin)
         queryset = changelist.get_queryset(request)
         self.assertEqual((list(queryset)), [self.book3])
@@ -2234,8 +2287,10 @@ class ListFiltersTests(TestCase):
         request = self.get_request('/', {'books_fk__id__inhierarchy': self.book1.pk})
         changelist = self.get_changelist(request, Category, modeladmin)
         queryset = changelist.get_queryset(request)
-        self.assertEqual((list(queryset)),
-                         [self.parent_category, self.child_category1, self.simple_category])
+        self.assertEqual(
+            (list(queryset)),
+            [self.parent_category, self.child_category1, self.simple_category],
+        )
 
         # Make sure filter for child book works as expected
         request = self.get_request('/', {'books_fk__id__inhierarchy': self.book2.pk})
@@ -2265,8 +2320,10 @@ class ListFiltersTests(TestCase):
         request = self.get_request('/', {'books_m2m__id__inhierarchy': self.book1.pk})
         changelist = self.get_changelist(request, Category, modeladmin)
         queryset = changelist.get_queryset(request)
-        self.assertEqual((list(queryset)),
-                         [self.parent_category, self.child_category1, self.simple_category])
+        self.assertEqual(
+            (list(queryset)),
+            [self.parent_category, self.child_category1, self.simple_category],
+        )
 
         # Make sure filter for child book works as expected
         request = self.get_request('/', {'books_m2m__id__inhierarchy': self.book2.pk})
@@ -2374,9 +2431,15 @@ class MovingNodeWithUniqueConstraint(TreeTestCase):
 class NullableOrderedInsertion(TreeTestCase):
     def test_nullable_ordered_insertion(self):
 
-        genreA = NullableOrderedInsertionModel.objects.create(name='A', parent=None)
-        genreA1 = NullableOrderedInsertionModel.objects.create(name='A1', parent=genreA)
-        genreAnone = NullableOrderedInsertionModel.objects.create(name=None, parent=genreA)
+        genreA = NullableOrderedInsertionModel.objects.create(
+            name='A', parent=None
+        )
+        genreA1 = NullableOrderedInsertionModel.objects.create(
+            name='A1', parent=genreA
+        )
+        genreAnone = NullableOrderedInsertionModel.objects.create(
+            name=None, parent=genreA
+        )
 
         self.assertTreeEqual(NullableOrderedInsertionModel.objects.all(), """
             1 - 1 0 1 6
@@ -2386,9 +2449,15 @@ class NullableOrderedInsertion(TreeTestCase):
 
     def test_nullable_ordered_insertion_desc(self):
 
-        genreA = NullableDescOrderedInsertionModel.objects.create(name='A', parent=None)
-        genreA1 = NullableDescOrderedInsertionModel.objects.create(name='A1', parent=genreA)
-        genreAnone = NullableDescOrderedInsertionModel.objects.create(name=None, parent=genreA)
+        genreA = NullableDescOrderedInsertionModel.objects.create(
+            name='A', parent=None
+        )
+        genreA1 = NullableDescOrderedInsertionModel.objects.create(
+            name='A1', parent=genreA
+        )
+        genreAnone = NullableDescOrderedInsertionModel.objects.create(
+            name=None, parent=genreA
+        )
 
         self.assertTreeEqual(NullableDescOrderedInsertionModel.objects.all(), """
             1 - 1 0 1 6
@@ -2412,7 +2481,7 @@ class ModelMetaIndexes(TreeTestCase):
 
     def test_index_together(self):
         already_idx = [['tree_id', 'lft'], ('tree_id', 'lft')]
-        no_idx = [tuple(), list()]
+        no_idx = [(), []]
         some_idx = [['tree_id'], ('tree_id',), [['tree_id']], (('tree_id',),)]
 
         for idx, case in enumerate(already_idx + no_idx + some_idx):
@@ -2435,7 +2504,7 @@ class ModelMetaIndexes(TreeTestCase):
 
     def test_index_together_different_attr(self):
         already_idx = [['abc', 'def'], ('abc', 'def')]
-        no_idx = [tuple(), list()]
+        no_idx = [(), []]
         some_idx = [['abc'], ('abc',), [['abc']], (('abc',),)]
 
         for idx, case in enumerate(already_idx + no_idx + some_idx):
@@ -2447,11 +2516,11 @@ class ModelMetaIndexes(TreeTestCase):
                 index_together = case
                 app_label = 'myapp'
 
-            SomeModel = type(str('model__different_attr_{0}'.format(idx)), (MPTTModel,), {
-                'MPTTMeta': MPTTMeta,
-                'Meta': Meta,
-                '__module__': str(__name__)
-            })
+            SomeModel = type(
+                str("model__different_attr_{0}".format(idx)),
+                (MPTTModel,),
+                {"MPTTMeta": MPTTMeta, "Meta": Meta, "__module__": str(__name__)},
+            )
 
             self.assertIn(('abc', 'def'), SomeModel._meta.index_together)
 
@@ -2515,7 +2584,9 @@ class BulkLoadTests(TestCase):
 
     def test_bulk_left(self):
         games = Category.objects.get(id=3)
-        records = Category.objects.build_tree_nodes(self.games, target=games, position='left')
+        records = Category.objects.build_tree_nodes(
+            self.games, target=games, position='left'
+        )
         self.assertEqual(len(records), 3)
         for record in records:
             self.assertEqual(record.tree_id, games.tree_id)

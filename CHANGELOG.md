@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.0.0] - TBD
+- CI improvements
+- Added changelog
+- Added linters (flake8, isort, black)
+- Mark wheels not universal
+- Many code style improvements
+- Fix test `DraggableMPTTAdminTestCase.test_changelist` 
+  broken in djangomaster due to 
+  (https://code.djangoproject.com/ticket/31080)
+
 ## [0.11.0] - 2020-01-18
 - Add an 'all' argument to drilldown_tree_for_node (#474)
 - Add Chinese (simplified) translations (#700)
