@@ -7,3 +7,4 @@ MANIFEST
 tests/mydatabase
 *.egg
 .eggs
+.vscode/*
