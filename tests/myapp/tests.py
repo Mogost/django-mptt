@@ -305,8 +305,8 @@ class ReparentingTestCase(TreeTestCase):
 class ConcurrencyTestCase(TreeTestCase):
 
     """
-    Test that tree structure remains intact when saving nodes (without setting new parent) after
-    tree structure has been changed.
+    Test that tree structure remains intact when saving nodes
+    (without setting new parent) aftertree structure has been changed.
     """
 
     def setUp(self):
@@ -980,7 +980,9 @@ class OrderedInsertionSortingTestCase(TestCase):
         # of reloading all Django instances pointing to a given row in the
         # database...
         #   self.assertIn(b, b.get_ancestors(include_self=True)))
-        self.assertRaises(AssertionError, self.assertIn, b, b.get_ancestors(include_self=True))
+        self.assertRaises(
+            AssertionError, self.assertIn, b, b.get_ancestors(include_self=True)
+        )
 
         # ... we need to reload it properly ourselves:
         b.refresh_from_db()
@@ -1209,7 +1211,10 @@ class ManagerTests(TreeTestCase):
                 if manager is None:
                     break
             else:
-                self.fail("Detected infinite recursion in %s._tree_manager._base_manager" % model)
+                self.fail(
+                    "Detected infinite recursion in %s._tree_manager._base_manager"
+                    % model
+                )
 
     def test_proxy_custom_manager(self):
         self.assertIsInstance(SingleProxyModel._tree_manager, CustomTreeManager)
@@ -1292,11 +1297,15 @@ class ManagerTests(TreeTestCase):
         """
 
         self.assertTrue(isinstance(Person.objects.all(), CustomTreeQueryset))
-        self.assertTrue(isinstance(Person.objects.all()[0].get_children(), CustomTreeQueryset))
+        self.assertTrue(
+            isinstance(Person.objects.all()[0].get_children(), CustomTreeQueryset)
+        )
         self.assertTrue(hasattr(Person.objects.none(), 'custom_method'))
 
         # Check that empty querysets get custom methods
-        self.assertTrue(hasattr(Person.objects.all()[0].get_children().none(), 'custom_method'))
+        self.assertTrue(
+            hasattr(Person.objects.all()[0].get_children().none(), 'custom_method')
+        )
 
         self.assertEqual(
             type(Person.objects.all()),
@@ -1308,8 +1317,9 @@ class ManagerTests(TreeTestCase):
         Test that a manager created from a custom queryset works.
         Regression test for #378.
         """
-        TreeManager.from_queryset(CustomTreeQueryset)().contribute_to_class(Genre, 'my_manager')
-
+        TreeManager.from_queryset(CustomTreeQueryset)().contribute_to_class(
+            Genre, "my_manager"
+        )
         self.assertIsInstance(Genre.my_manager.get_queryset(), CustomTreeQueryset)
 
     def test_num_queries_on_get_queryset_descendants(self):
@@ -1368,7 +1378,8 @@ class CacheTreeChildrenTestCase(TreeTestCase):
         with self.assertNumQueries(1):
             cache_tree_children(list(Category.objects.all()))
 
-        # The exact ordering tuple doesn't matter, long as the nodes end up in depth-first order.
+        # The exact ordering tuple doesn't matter,
+        # long as the nodes end up in depth-first order.
         cache_tree_children(Category.objects.order_by('tree_id', 'lft', 'name'))
         cache_tree_children(Category.objects.filter(tree_id=1).order_by('lft'))
 
@@ -1696,42 +1707,66 @@ class TestUnsaved(TreeTestCase):
 
 
 class QuerySetTests(TreeTestCase):
-    fixtures = ['categories.json']
+    fixtures = ["categories.json"]
 
     def test_get_ancestors(self):
         self.assertEqual(
             [
-                c.pk for c in
-                Category.objects.get(name="Nintendo Wii").get_ancestors(include_self=False)],
+                c.pk
+                for c in Category.objects.get(name="Nintendo Wii").get_ancestors(
+                    include_self=False
+                )
+            ],
             [
-                c.pk for c in
-                Category.objects.filter(name="Nintendo Wii").get_ancestors(include_self=False)],
+                c.pk
+                for c in Category.objects.filter(name="Nintendo Wii").get_ancestors(
+                    include_self=False
+                )
+            ],
         )
         self.assertEqual(
             [
-                c.pk for c in
-                Category.objects.get(name="Nintendo Wii").get_ancestors(include_self=True)],
+                c.pk
+                for c in Category.objects.get(name="Nintendo Wii").get_ancestors(
+                    include_self=True
+                )
+            ],
             [
-                c.pk for c in
-                Category.objects.filter(name="Nintendo Wii").get_ancestors(include_self=True)],
+                c.pk
+                for c in Category.objects.filter(name="Nintendo Wii").get_ancestors(
+                    include_self=True
+                )
+            ],
         )
 
     def test_get_descendants(self):
         self.assertEqual(
             [
-                c.pk for c in
-                Category.objects.get(name="Nintendo Wii").get_descendants(include_self=False)],
+                c.pk
+                for c in Category.objects.get(name="Nintendo Wii").get_descendants(
+                    include_self=False
+                )
+            ],
             [
-                c.pk for c in
-                Category.objects.filter(name="Nintendo Wii").get_descendants(include_self=False)],
+                c.pk
+                for c in Category.objects.filter(name="Nintendo Wii").get_descendants(
+                    include_self=False
+                )
+            ],
         )
         self.assertEqual(
             [
-                c.pk for c in
-                Category.objects.get(name="Nintendo Wii").get_descendants(include_self=True)],
+                c.pk
+                for c in Category.objects.get(name="Nintendo Wii").get_descendants(
+                    include_self=True
+                )
+            ],
             [
-                c.pk for c in
-                Category.objects.filter(name="Nintendo Wii").get_descendants(include_self=True)],
+                c.pk
+                for c in Category.objects.filter(name="Nintendo Wii").get_descendants(
+                    include_self=True
+                )
+            ],
         )
 
 
@@ -1868,7 +1903,9 @@ class CacheChildrenTestCase(TreeTestCase):
         list(Category.objects.filter(visible=True).get_cached_trees()) == [child, root2]
 
 
-@unittest.skipUnless(mock_signal_receiver, "Signals tests require mock_django installed")
+@unittest.skipUnless(
+    mock_signal_receiver, "Signals tests require mock_django installed"
+)
 class Signals(TestCase):
     fixtures = ['categories.json']
 
@@ -2118,7 +2155,7 @@ class ListFiltersTests(TestCase):
         request = self.get_request('/')
         changelist = self.get_changelist(request, Book, modeladmin)
 
-        # Make sure that all categories are present 
+        # Make sure that all categories are present
         # in the referencing model's list filter
         filterspec = changelist.get_filters(request)[0][0]
         expected = [
@@ -2194,7 +2231,7 @@ class ListFiltersTests(TestCase):
         request = self.get_request('/')
         changelist = self.get_changelist(request, Book, modeladmin)
 
-        # Make sure that all categories are present 
+        # Make sure that all categories are present
         # in the referencing model's list filter
         filterspec = changelist.get_filters(request)[0][1]
         expected = [
@@ -2396,7 +2433,8 @@ class MovingNodeWithUniqueConstraint(TreeTestCase):
 
         a = UniqueTogetherModel.objects.create(code='a', parent=None)
         b = UniqueTogetherModel.objects.create(code='b', parent=None)
-        a1 = UniqueTogetherModel.objects.create(code='1', parent=a)
+        # a1
+        UniqueTogetherModel.objects.create(code='1', parent=a)
         b1 = UniqueTogetherModel.objects.create(code='1', parent=b)
         b1.parent, b1.code = a, '2'  # b1 -> a2
         b1.save()
@@ -2415,7 +2453,8 @@ class MovingNodeWithUniqueConstraint(TreeTestCase):
 
         a = UniqueTogetherModel.objects.create(code='a', parent=None)
         b = UniqueTogetherModel.objects.create(code='b', parent=None)
-        a1 = UniqueTogetherModel.objects.create(code='1', parent=a)
+        # a1
+        UniqueTogetherModel.objects.create(code='1', parent=a)
         a2 = UniqueTogetherModel.objects.create(code='2', parent=a)
         a2.parent, a2.code = b, '1'  # a2 -> b1
         a2.save()
@@ -2434,13 +2473,14 @@ class NullableOrderedInsertion(TreeTestCase):
         genreA = NullableOrderedInsertionModel.objects.create(
             name='A', parent=None
         )
-        genreA1 = NullableOrderedInsertionModel.objects.create(
-            name='A1', parent=genreA
+        # genreA1
+        NullableOrderedInsertionModel.objects.create(
+            name="A1", parent=genreA
         )
-        genreAnone = NullableOrderedInsertionModel.objects.create(
+        # genreAnone
+        NullableOrderedInsertionModel.objects.create(
             name=None, parent=genreA
         )
-
         self.assertTreeEqual(NullableOrderedInsertionModel.objects.all(), """
             1 - 1 0 1 6
             3 1 1 1 2 3
@@ -2452,12 +2492,10 @@ class NullableOrderedInsertion(TreeTestCase):
         genreA = NullableDescOrderedInsertionModel.objects.create(
             name='A', parent=None
         )
-        genreA1 = NullableDescOrderedInsertionModel.objects.create(
-            name='A1', parent=genreA
-        )
-        genreAnone = NullableDescOrderedInsertionModel.objects.create(
-            name=None, parent=genreA
-        )
+        # genreA1
+        NullableDescOrderedInsertionModel.objects.create(name='A1', parent=genreA)
+        # genreAnone
+        NullableDescOrderedInsertionModel.objects.create(name=None, parent=genreA)
 
         self.assertTreeEqual(NullableDescOrderedInsertionModel.objects.all(), """
             1 - 1 0 1 6

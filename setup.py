@@ -9,8 +9,8 @@ CURRENT_DIR = Path(__file__).parent
 
 def get_long_description() -> str:
     readme = CURRENT_DIR / "README.rst"
-    with open(readme) as readme_file:
-        return ld_freadme_fileile.read()
+    with open(str(readme)) as readme_file:
+        return readme_file.read()
 
 
 setup(
